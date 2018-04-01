@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <getopt.h>
-#include "../src/i2c.h"
+#include "src/i2c.h"
 // Address si AD0=gnd 
 #define MPU6050_ADDRESS  0x68
 // registre who am i 
@@ -36,10 +36,17 @@ struct {
     unsigned short gx;
     unsigned short gy;
     unsigned short gz;
-    float tmp;
+    double tmp;
 }mpu6050;
 void display_help(const char *arg){
-    fprintf(stderr,"usage: %s -d for get id device, -a get accelaration, -g get gyroscope or -t get température",arg);
+    fprintf(stderr, "usage: %s options...\n", arg);
+	fprintf(stderr, " options:\n");
+	fprintf(stderr, " -a --acceleration\n");
+	fprintf(stderr, " -d --device \n");
+	fprintf(stderr, " -g --gyroscope\n");
+	fprintf(stderr, " -t --temperature\n");
+	fprintf(stderr, " -h --help Prints this help\n\n");
+	fprintf(stderr, "Example: %s --acceleration --temperature\n\n", arg);
 }
 void get_device(void){
     uint8_t msg_reg[1]={0x75};
@@ -49,7 +56,7 @@ void get_device(void){
         {.addr=MPU6050_ADDRESS, .flags=0, .len=1, .buf=msg_reg},
         {.addr=MPU6050_ADDRESS, .flags = I2C_M_RD, .len=1, .buf=msg_data},
     };
-     if (i2c_transfer(&i2c, msg, 1) < 0) {
+     if (i2c_transfer(&i2c, msg, 2) < 0) {
         fprintf(stderr, "i2c_transfer(): %s\n", i2c_errmsg(&i2c));
         exit(1);
     }
@@ -89,7 +96,7 @@ void get_temp(void){
         exit(1);
     }
     tmp=(msg_data[0] <<8) | msg_data[1];
-    mpu6050.tmp=((float)tmp/ 340.0) + 36.53;
+    mpu6050.tmp=((double)tmp/ 340.0) + 36.53;
     printf("Température : %f\n",mpu6050.tmp);
 
 }
@@ -163,23 +170,35 @@ void get_gyro(void){
     mpu6050.gx=(msg_data[0]<<8)|msg_data[1];
     mpu6050.gy=(msg_data[2]<<8)|msg_data[3];
     mpu6050.gz=(msg_data[4]<<8)|msg_data[5];
-    printf("Accélération: ax: %d, ay: %d, az: %d\n",mpu6050.gx,mpu6050.gy,mpu6050.gz);
+    printf("Accélération: gx: %d, gy: %d, gz: %d\n",mpu6050.gx,mpu6050.gy,mpu6050.gz);
 }
 
 int main (int argc, char *argv[]){
-    uint16_t option;
+    int long_index = 0;
+	int opt;
+	static struct option option[] = 
+	{
+		{"acceleration", 	no_argument, 		NULL, 'a' },		
+		{"device", 	no_argument, 		NULL, 'd' },
+		{"gyroscope", 	no_argument, 		NULL, 'g' },
+		{"temperature", 	no_argument, 		NULL, 't' },
+		{"help", 	no_argument, 		NULL, 'h' },
+		{0, 			0, 		0, 	0 }
+	};
+        /* Open the i2c-0 bus on Pico-pi-imx7d */
+    if (i2c_open(&i2c, "/dev/i2c-0") < 0) {
+        fprintf(stderr, "i2c_open(): %s\n", i2c_errmsg(&i2c));
+        exit(1);
+    }
     if (argc < 2){
 	display_help(argv[0]);
 	exit(EXIT_FAILURE);
     }
-    /* Open the i2c-2 bus on Pico-pi-imx7d */
-    if (i2c_open(&i2c, "/dev/i2c-2") < 0) {
-        fprintf(stderr, "i2c_open(): %s\n", i2c_errmsg(&i2c));
-        exit(1);
-    }
+
     mpu6050_init();
-    while((option = getopt(argc,argv,"dagtq")!=-1)){
-        switch(option){
+
+    while((opt = getopt_long(argc,argv,"adgth",option,&long_index))>=0){
+        switch(opt){
             case 'd':
             get_device();
             break;
@@ -192,9 +211,11 @@ int main (int argc, char *argv[]){
             case 't':
             get_temp();
             break;
-            default:
+            case 'h':
             display_help(argv[0]);
-            break;
+            default :
+			fprintf(stderr,"[ERROR] %s: Bad option. -h for help\n", argv[0]);
+			exit(EXIT_FAILURE);
         }
     }
 	

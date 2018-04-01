@@ -1,11 +1,11 @@
-NAME=MPU6050
-CFLAGS=-I src
+NAME=mpu6050
+CFLAGS=-I /src
 OBJ=${NAME}.o
 LIB=periphery.a
 %.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-MPU6050: $(OBJ)
+mpu6050: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS) $(LIB)
 
 .PHONY: clean 
