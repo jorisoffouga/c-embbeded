@@ -28,6 +28,8 @@
 // Registres temperature
 #define MPU6050_TEMP_H 0x41
 #define MPU6050_TEMP_L 0x42
+#define SENSITIVITY_ACCEL 16384
+#define SENSITIVITY_GYRO 131
 i2c_t i2c;
 struct {
     unsigned short ax;
@@ -36,7 +38,7 @@ struct {
     unsigned short gx;
     unsigned short gy;
     unsigned short gz;
-    double tmp;
+    float tmp;
 }mpu6050;
 void display_help(const char *arg){
     fprintf(stderr, "usage: %s options...\n", arg);
@@ -60,7 +62,7 @@ void get_device(void){
         fprintf(stderr, "i2c_transfer(): %s\n", i2c_errmsg(&i2c));
         exit(1);
     }
-    printf(" Device: %d\n",msg_data[0]);
+    printf(" Device: %x\n",msg_data[0]);
 }
 
 void mpu6050_init(void){
@@ -83,7 +85,7 @@ void get_temp(void){
     uint8_t msg_reg_h[1]={0x41};
     uint8_t msg_reg_l[1]={0x42};
     uint8_t msg_data[2]={0};
-    unsigned short tmp;
+    signed short tmp;
     struct i2c_msg msg[4]=
     {
         {.addr=MPU6050_ADDRESS,.flags=0, .len=1, .buf=msg_reg_h},
@@ -96,7 +98,7 @@ void get_temp(void){
         exit(1);
     }
     tmp=(msg_data[0] <<8) | msg_data[1];
-    mpu6050.tmp=((double)tmp/ 340.0) + 36.53;
+    mpu6050.tmp=((float)tmp/ 340.0) + 36.53;
     printf("Température : %f\n",mpu6050.tmp);
 
 }
@@ -131,9 +133,15 @@ void get_accel(void){
         fprintf(stderr, "i2c_transfer(): %s\n", i2c_errmsg(&i2c));
         exit(1);
     }
+
     mpu6050.ax=(msg_data[0]<<8)|msg_data[1];
     mpu6050.ay=(msg_data[2]<<8)|msg_data[3];
     mpu6050.az=(msg_data[4]<<8)|msg_data[5];
+
+    // Convert value with sensivity
+    mpu6050.ax=mpu6050.ax / SENSITIVITY_ACCEL;
+    mpu6050.ay=mpu6050.ay / SENSITIVITY_ACCEL;
+    mpu6050.az=mpu6050.az / SENSITIVITY_ACCEL;
     printf("Accélération: ax: %d, ay: %d, az: %d\n",mpu6050.ax,mpu6050.ay,mpu6050.az);
 }
 
@@ -167,9 +175,15 @@ void get_gyro(void){
         fprintf(stderr, "i2c_transfer(): %s\n", i2c_errmsg(&i2c));
         exit(1);
     }
+
     mpu6050.gx=(msg_data[0]<<8)|msg_data[1];
     mpu6050.gy=(msg_data[2]<<8)|msg_data[3];
     mpu6050.gz=(msg_data[4]<<8)|msg_data[5];
+    
+    // Convert value with sensivity
+    mpu6050.gx=mpu6050.gx / SENSITIVITY_GYRO;
+    mpu6050.gy=mpu6050.gy / SENSITIVITY_GYRO;
+    mpu6050.gz=mpu6050.gz / SENSITIVITY_GYRO;
     printf("Accélération: gx: %d, gy: %d, gz: %d\n",mpu6050.gx,mpu6050.gy,mpu6050.gz);
 }
 
