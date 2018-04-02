@@ -28,6 +28,7 @@
 // Registres temperature
 #define MPU6050_TEMP_H 0x41
 #define MPU6050_TEMP_L 0x42
+// Sensitivity
 #define SENSITIVITY_ACCEL 16384
 #define SENSITIVITY_GYRO 131
 i2c_t i2c;
