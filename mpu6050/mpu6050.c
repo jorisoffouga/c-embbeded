@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <getopt.h>
 #include "src/i2c.h"
-// Address si AD0=gnd 
+// Address if AD0=gnd 
 #define MPU6050_ADDRESS  0x68
 // registre who am i 
 #define MPU6050_WHO_AM_I 0x75
@@ -29,16 +29,16 @@
 #define MPU6050_TEMP_H 0x41
 #define MPU6050_TEMP_L 0x42
 // Sensitivity
-#define SENSITIVITY_ACCEL 16384
-#define SENSITIVITY_GYRO 131
+#define SENSITIVITY_ACCEL 8192
+#define SENSITIVITY_GYRO 65.5
 i2c_t i2c;
 struct {
-    unsigned short ax;
-    unsigned short ay;
-    unsigned short az;
-    unsigned short gx;
-    unsigned short gy;
-    unsigned short gz;
+    signed short ax;
+    signed short ay;
+    signed short az;
+    signed short gx;
+    signed short gy;
+    signed short gz;
     float tmp;
 }mpu6050;
 void display_help(const char *arg){
@@ -67,9 +67,9 @@ void get_device(void){
 }
 
 void mpu6050_init(void){
-    uint8_t msg_config[2]={0x6B,0x01};
-    uint8_t msg_config_accel[2]={0x1B,0x00};
-    uint8_t msg_config_gyro[2]={0x1C,0x00};
+    uint8_t msg_config[2]={0x6B,0x09};
+    uint8_t msg_config_accel[2]={0x1B,0x08};
+    uint8_t msg_config_gyro[2]={0x1C,0x08};
     struct i2c_msg msg[3]=
     {
         {.addr=MPU6050_ADDRESS,.flags=0, .len=2, .buf=msg_config},
