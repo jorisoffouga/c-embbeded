@@ -1,0 +1,31 @@
+<CodeGenerationInfo>
+  <ToolchainSettings>
+    <option>
+      <name>PE_G_4PEx_ToolChain_Compiler_SearchUserPaths</name>
+      <values lines_count="2">
+        <Line>"${ProjDirPath}/Sources"</Line>
+        <Line>"${ProjDirPath}/Generated_Code"</Line>
+      </values>
+    </option>
+  </ToolchainSettings>
+  <GeneratedFilesList>
+    <GeneratedByPE>
+      <File Name="Sources/Events.h" FileDate="2018-04-26, 10:19:05" FileAge="1524730745005" FileType="131328" />
+      <File Name="Generated_Code/PE_Error.h" FileDate="2018-04-26, 12:34:39" FileAge="1524738879595" FileType="45637" />
+      <File Name="Generated_Code/IO_Map.c" FileDate="2018-04-26, 12:34:39" FileAge="1524738879588" FileType="45637" />
+      <File Name="Project_Settings/Linker_Files/ProcessorExpert.prm" FileDate="2018-04-26, 12:34:39" FileAge="1524738879581" FileType="8" CompNumb="4" />
+      <File Name="Sources/Events.c" FileDate="2018-04-26, 10:19:05" FileAge="1524730745019" FileType="131328" />
+      <File Name="Generated_Code/PE_Types.h" FileDate="2018-04-26, 12:34:39" FileAge="1524738879597" FileType="45637" />
+      <File Name="Documentation/Gpio_expander_Settings.xml" FileDate="2018-04-26, 12:34:39" FileAge="1524738879606" FileType="3072" />
+      <File Name="Sources/main.c" FileDate="2018-04-27, 00:10:19" FileAge="1524780619787" FileType="128" />
+      <File Name="Documentation/Gpio_expander_SIGNALS.txt" FileDate="2018-04-27, 10:02:42" FileAge="1524816162086" FileType="3072" />
+      <File Name="Generated_Code/Vectors.c" FileDate="2018-04-26, 12:34:39" FileAge="1524738879577" FileType="45637" CompNumb="4" />
+      <File Name="Documentation/Gpio_expander.txt" FileDate="2018-04-26, 12:34:39" FileAge="1524738879610" FileType="3072" />
+      <File Name="Generated_Code/Cpu.h" FileDate="2018-04-26, 12:34:39" FileAge="1524738879585" FileType="45637" CompNumb="4" />
+      <File Name="Generated_Code/PE_Const.h" FileDate="2018-04-26, 12:34:39" FileAge="1524738879593" FileType="45637" />
+      <File Name="Generated_Code/IO_Map.h" FileDate="2018-04-26, 12:34:39" FileAge="1524738879591" FileType="45637" />
+      <File Name="Generated_Code/Cpu.c" FileDate="2018-04-26, 12:34:39" FileAge="1524738879583" FileType="45637" CompNumb="4" />
+    </GeneratedByPE>
+  </GeneratedFilesList>
+  <CodeGenReference>5</CodeGenReference>
+</CodeGenerationInfo>
