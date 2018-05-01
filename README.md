@@ -1,2 +1,2 @@
 #c-embedded 
-Branch to dev C with HS08 Freescale 
+Branch to dev C with STM32 STMicroelectronics
